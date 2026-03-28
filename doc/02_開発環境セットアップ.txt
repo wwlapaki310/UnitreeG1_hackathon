@@ -1,0 +1,327 @@
+
+開発環境セットアップ
+Python SDK インストールガイド（初心者向け）
+ロボットと生きる未来をデザインするハッカソン
+
+
+
+はじめに
+このガイドでは、G1ロボットを制御するための開発環境をセットアップする方法を、初心者の方にもわかりやすく解説します。
+プログラミング経験が少ない方でも、手順通りに進めれば環境を構築できるようになっています。
+わからない用語は、巻末の「Appendix: 用語解説」を参照してください。
+
+🚨 最重要：unitree_sdk2_python は Python 3.10 専用です。3.8、3.9、3.11、3.12 では動作しません。必ず 3.10 を使用してください。
+
+
+
+1. 必要な環境
+項目
+要件
+OS
+Ubuntu 22.04 LTS（推奨）/ Windows 11 + WSL2 / macOS
+Python
+3.10（必須・他バージョン不可）
+メモリ
+8GB以上推奨
+ストレージ
+10GB以上の空き容量
+
+2. システム構成
+
+
+開発PCとG1はEthernet（有線LAN）で接続します。
+
+デバイス
+IPアドレス
+役割
+開発PC（あなた）
+192.168.123.99
+外部開発環境
+Jetson Orin（G1内部）
+192.168.123.164
+SSH先
+RockChip
+192.168.123.161
+ロコモーション制御
+LiDAR
+192.168.123.120
+点群データ
+
+💡 G1内部へのSSH: ssh unitree@192.168.123.164（パスワード: 123）
+
+
+3. Pythonのインストール（詳細）
+⚠️ Python のバージョンは必ず 3.10 にしてください。「新しいほうがいい」と思って 3.11 や 3.12 をインストールすると動きません。
+
+
+
+3.1 Ubuntu 22.04 の場合
+Ubuntu 22.04 には Python 3.10 がデフォルトでインストールされています。
+
+【確認方法】
+ターミナルを開いて以下を入力：
+  python3 --version
+
+「Python 3.10.x」と表示されればOKです。
+
+💡 ターミナルの開き方：Ctrl + Alt + T を同時に押す
+
+3.2 Windows 11 の場合（WSL2 を使用）
+G1のSDKはLinux環境向けに設計されています。
+Windowsでは「WSL2」という機能を使って、Windows上でUbuntuを動かします。
+
+
+
+【WSL2 のインストール手順】
+
+Step 1: スタートメニューで「PowerShell」を検索
+Step 2: 「管理者として実行」を選択
+Step 3: 以下のコマンドを入力してEnter：
+  wsl --install -d Ubuntu-22.04
+Step 4: インストール完了後、PCを再起動
+Step 5: 再起動後、自動的にUbuntuが起動
+Step 6: ユーザー名とパスワードを設定（忘れないようにメモ）
+
+⚠️ よくあるミス：PowerShellを「管理者として実行」しないとエラーになります。
+
+【WSL2 が既にインストール済みの場合】
+スタートメニューで「Ubuntu」を検索して起動してください。
+
+3.3 macOS の場合
+Homebrewを使ってPython 3.10をインストールします。
+
+【Homebrew がまだない場合】
+ターミナルで以下を実行：
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+【Python 3.10 のインストール】
+  brew install python@3.10
+
+【パスを通す】
+  echo 'export PATH="/opt/homebrew/opt/python@3.10/bin:$PATH"' >> ~/.zshrc
+  source ~/.zshrc
+
+3.4 間違えて別バージョンを入れてしまった場合
+🚨 Python 3.11 や 3.12 を入れてしまった方はこちらを参照してください。
+
+【Ubuntu / WSL2 の場合】
+Python 3.10 を追加インストールします（既存バージョンはそのまま）：
+
+  sudo apt update
+  sudo apt install python3.10 python3.10-venv python3.10-dev
+
+その後、仮想環境を作る際に python3.10 を明示的に指定します。
+
+【macOS の場合】
+pyenv を使って複数バージョンを管理する方法が便利です：
+
+  brew install pyenv
+  pyenv install 3.10.13
+  pyenv local 3.10.13
+
+【Windows（WSL2を使わない場合）】
+公式サイトから Python 3.10 をダウンロードして追加インストール：
+  https://www.python.org/downloads/release/python-31013/
+インストール時に「Add Python to PATH」にチェックを入れないこと。
+仮想環境作成時にフルパスで指定します。
+
+4. 仮想環境の作成
+「仮想環境」とは、プロジェクトごとに独立したPython環境を作る仕組みです。
+これにより、他のプロジェクトに影響を与えずにライブラリをインストールできます。
+
+
+
+【仮想環境の作成】
+  python3.10 -m venv ~/g1_venv
+
+【仮想環境の有効化】
+  source ~/g1_venv/bin/activate
+
+有効化されると、プロンプトの先頭に (g1_venv) と表示されます。
+
+⚠️ 重要：ターミナルを開くたびに source ~/g1_venv/bin/activate を実行する必要があります。忘れると「モジュールが見つからない」エラーになります。
+
+【よくあるミス】
+• (g1_venv) が表示されていない状態で pip install すると、システム全体にインストールされてしまう
+• 「仮想環境を有効化したはずなのに動かない」→ ターミナルを新しく開いたら再度有効化が必要
+
+5. SDKのインストール
+G1を制御するためのSDK（開発キット）をインストールします。
+
+【前提条件】
+• git がインストールされていること
+• 仮想環境が有効化されていること（プロンプトに (g1_venv) が表示）
+
+【git がない場合】
+  sudo apt install git
+
+【SDKのインストール手順】
+  # 仮想環境を有効化（必須）
+  source ~/g1_venv/bin/activate
+
+  # SDKリポジトリをクローン
+  git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
+  cd unitree_sdk2_python
+
+  # インストール
+  pip install -e .
+
+【動作確認】
+  python -c "from unitree_sdk2py.core.channel import ChannelFactoryInitialize; print('SDK OK!')"
+
+「SDK OK!」と表示されれば成功です。
+
+⚠️ エラーが出る場合：(g1_venv) が表示されているか確認。表示されていなければ仮想環境を有効化してから再実行。
+
+
+6. 【参考】シミュレータのセットアップ
+
+
+※本ハッカソンは実機中心で進行します。シミュレータは参考環境としてご利用ください。 シミュレータを使うと、実機がなくてもプログラムの動作を確認できます。
+
+
+
+⚠️ シミュレータに関する重要な注意  シミュレータと実機の動作は完全には一致しません。  • シミュレータで動いても実機で動かない場合があります • 特に歩行バランスや物理的な動きは差が大きいです • シミュレータはあくまで「大まかな動作確認」用です • 最終的な動作確認は必ず実機で行ってください  Day2では実機を使った開発時間がありますので、 シミュレータで基本動作を確認した後、実機で調整しましょう。
+
+【依存パッケージのインストール】
+  pip install mujoco pygame numpy
+
+【シミュレータのクローン】
+  cd ~
+  git clone https://github.com/unitreerobotics/unitree_mujoco.git
+
+【シミュレータの起動】
+  cd ~/unitree_mujoco/simulate_python
+  python3 unitree_mujoco.py
+
+ウィンドウが開き、G1のモデルが表示されれば成功です。
+
+7. トラブルシューティング
+
+
+7.1 よくあるエラーと解決策
+症状
+解決策
+ModuleNotFoundError
+仮想環境を有効化: source ~/g1_venv/bin/activate
+python3.10: command not found
+Python 3.10 をインストール（3.4節参照）
+Permission denied
+コマンドの先頭に sudo を付ける
+git: command not found
+sudo apt install git
+pip: command not found
+sudo apt install python3-pip
+シミュレータが起動しない
+mujoco, pygame, numpy がインストールされているか確認
+画面が真っ黒
+グラフィックドライバを更新、またはWSL2のgui機能を有効化
+
+7.2 初心者がつまずきやすいポイント
+
+
+【1. コマンドのコピペミス】
+• 先頭の $ や # はコマンドの一部ではありません（入力しない）
+• 全角スペースが混入するとエラーになります
+• 改行位置で切れていないか確認してください
+
+【2. 仮想環境の有効化忘れ】
+• 毎回ターミナルを開くたびに有効化が必要です
+• (g1_venv) が表示されているか常に確認
+
+【3. ディレクトリの移動忘れ】
+• git clone した後は cd でそのフォルダに移動が必要
+• pwd コマンドで現在地を確認できます
+
+【4. パスワード入力時の注意】
+• sudo のパスワード入力時、文字は表示されません（セキュリティのため）
+• 入力できていないように見えても、実際は入力されています
+
+⚠️ セットアップで困った場合は Discord #質問・相談 チャンネルへ。エラーメッセージのスクリーンショットを添えると解決が早いです。
+
+8. セットアップ完了チェックリスト
+☐ Python 3.10 がインストールされている（python3.10 --version で確認）
+☐ 仮想環境 g1_venv が作成されている
+☐ 仮想環境を有効化すると (g1_venv) が表示される
+☐ unitree_sdk2_python がインストールされている
+☐ SDK動作確認コマンドで「SDK OK!」と表示される
+☐ MuJoCoシミュレータが起動する（参考環境）
+
+
+9. 参考リンク集
+公式ドキュメント
+• G1 SDK Development Guide
+  https://support.unitree.com/home/en/G1_developer
+
+• Unitree G1 製品ページ
+  https://www.unitree.com/g1/
+
+GitHubリポジトリ
+• unitree_sdk2_python（Python SDK）
+  https://github.com/unitreerobotics/unitree_sdk2_python
+
+• unitree_mujoco（シミュレータ）
+  https://github.com/unitreerobotics/unitree_mujoco
+
+• unitree_ros2（ROS 2パッケージ）
+  https://github.com/unitreerobotics/unitree_ros2
+
+Python関連
+• Python 公式サイト
+  https://www.python.org/
+
+• Python 3.10 ダウンロード
+  https://www.python.org/downloads/release/python-31013/
+
+その他
+• WSL2 インストールガイド（Microsoft公式）
+  https://learn.microsoft.com/ja-jp/windows/wsl/install
+
+• Homebrew（macOS）
+  https://brew.sh/ja/
+
+
+Appendix: 用語解説（初心者向け）
+このセクションでは、ドキュメント内で使用している技術用語を解説します。
+
+■ Ubuntu（ウブントゥ）
+Linuxという種類のOS（オペレーティングシステム）の一つ。WindowsやmacOSと同じ「パソコンを動かす基本ソフト」です。G1のSDKはLinux向けに作られているため、Ubuntu環境が推奨されます。
+
+■ Python（パイソン）
+プログラミング言語の一つ。読みやすく書きやすいのが特徴で、AI・機械学習・ロボット制御など幅広く使われています。G1の制御プログラムはPythonで書きます。
+
+■ ターミナル / コマンドライン
+文字でパソコンに命令を出すためのアプリ。マウスでクリックする代わりに、キーボードでコマンド（命令文）を入力して操作します。
+
+■ SDK（エスディーケー）
+Software Development Kitの略。特定のソフトウェアやハードウェアを開発するために必要なツールやライブラリをまとめたものです。
+
+■ pip（ピップ）
+Pythonのパッケージ管理ツール。Pythonの追加機能（ライブラリ）をインストールするのに使います。「pip install ○○」でインストールできます。
+
+■ 仮想環境（venv）
+プロジェクトごとに独立したPython環境を作る仕組み。違うプロジェクトで違うバージョンのライブラリを使いたい時に便利です。
+
+■ git（ギット）
+プログラムのバージョン管理システム。「git clone」でインターネット上のプログラムをダウンロードできます。
+
+■ GitHub（ギットハブ）
+gitを使ったプログラムの共有サービス。世界中の開発者がプログラムを公開しています。G1のSDKもここで公開されています。
+
+■ WSL2（ダブリューエスエルツー）
+Windows Subsystem for Linux 2の略。Windows上でLinux（Ubuntu）を動かすための機能。これを使うとWindowsパソコンでもLinux向けのプログラムが動きます。
+
+■ SSH（エスエスエイチ）
+Secure Shellの略。ネットワーク経由で別のコンピュータに安全に接続するための仕組み。G1内部のコンピュータに接続する際に使います。
+
+■ IPアドレス
+ネットワーク上の住所のようなもの。192.168.123.99 のような数字で表されます。G1と通信するために、正しいIPアドレスを設定する必要があります。
+
+■ シミュレータ（参考環境）
+実物を使わずにコンピュータ上で動作を再現するソフトウェア。実機がなくてもプログラムの動作を確認できます。ただし完全に同じ動きにはなりません。
+
+■ Homebrew（ホームブリュー）
+macOS用のパッケージ管理ツール。コマンドで簡単にソフトウェアをインストールできます。
+
+
+RobotMateHub | ロボットと生きる未来をデザインするハッカソン

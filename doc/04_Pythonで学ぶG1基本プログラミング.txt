@@ -1,0 +1,362 @@
+
+Pythonで学ぶG1基本プログラミング
+G1を動かす最初の一歩（コピペで動く！）
+ロボットと生きる未来をデザインするハッカソン
+
+
+
+はじめに
+このガイドでは、PythonでG1を動かす方法を、コピペでそのまま動くレベルで解説します。
+
+【前提条件】
+• 「02_開発環境セットアップ」が完了していること
+• Python 3.10 がインストールされていること
+• unitree_sdk2_python がインストールされていること
+• MuJoCoシミュレータが起動できること（参考環境・任意）
+
+💡 まだ環境構築が終わっていない方は、先に「02_開発環境セットアップ」を完了させてください。
+
+1. ターミナルを開いて準備する
+【手順】コピペでOK！
+
+① ターミナルを開く
+  • Ubuntu: Ctrl + Alt + T
+  • Windows (WSL2): スタートメニューで「Ubuntu」を検索して起動
+  • macOS: Cmd + Space で「ターミナル」を検索
+
+② 仮想環境を有効化する（以下をコピペ）
+
+source ~/g1_venv/bin/activate
+
+③ プロンプトの先頭に (g1_venv) が表示されることを確認
+
+⚠️ (g1_venv) が表示されていない状態でプログラムを実行するとエラーになります。毎回必ず確認してください。
+
+2. 作業フォルダを作成する
+プログラムを保存するフォルダを作ります（以下をコピペ）
+
+mkdir -p ~/g1_hackathon && cd ~/g1_hackathon
+
+これで ~/g1_hackathon フォルダに移動しました。
+以降、このフォルダでプログラムを作成します。
+
+
+3. 最初のプログラムを作成する
+G1を立ち上がらせて、前に歩かせて、しゃがませるプログラムを作ります。
+
+3.1 ファイルを作成
+以下のコマンドでエディタを開きます（以下をコピペ）
+
+nano walk_demo.py
+
+nanoエディタが開きます（黒い画面にカーソルが表示される）
+
+3.2 プログラムをコピペ
+以下のコードを全部コピーして、nanoエディタに貼り付けてください。
+
+#!/usr/bin/env python3 """ G1 歩行デモ - 最初のプログラム シミュレータで動作確認してから実機で実行してください """  import sys import time from unitree_sdk2py.core.channel import ChannelFactoryInitialize from unitree_sdk2py.g1.loco.g1_loco_client import LocoClient  def main():     # === Step 1: 初期化 ===     # 引数なし = シミュレータ、引数あり = 実機     if len(sys.argv) < 2:         print("=== シミュレータモード ===")         ChannelFactoryInitialize(1, "lo")     else:         print(f"=== 実機モード: {sys.argv[1]} ===")         ChannelFactoryInitialize(0, sys.argv[1])      # LocoClientを初期化     client = LocoClient()     client.SetTimeout(10.0)     client.Init()      print("G1と接続しました")      # === Step 2: 立ち上がり ===     print("[1/4] 立ち上がります...")     client.Squat2StandUp()     time.sleep(3)  # 3秒待つ      # === Step 3: 前進 ===     print("[2/4] 前に歩きます...")     client.Move(0.3, 0, 0)  # 前進 0.3 m/s     time.sleep(2)           # 2秒間歩く      # === Step 4: 停止 ===     print("[3/4] 停止します...")     client.Move(0, 0, 0)    # 必ず停止させる！     time.sleep(1)      # === Step 5: しゃがむ ===     print("[4/4] しゃがみます...")     client.StandUp2Squat()      print("=== 完了 ===")   if __name__ == "__main__":     main()
+
+3.3 ファイルを保存
+コピペが終わったら、以下の手順で保存します。
+
+① Ctrl + O を押す（保存）
+② Enter を押す（ファイル名確定）
+③ Ctrl + X を押す（エディタを終了）
+
+💡 これで walk_demo.py というファイルが作成されました。
+
+
+4. 【参考】シミュレータで実行する
+※本ハッカソンは実機中心です。シミュレータは参考としてご活用ください。 まずシミュレータで動作確認します。実機を壊すリスクなく、プログラムが正しいか確認できます。
+
+4.1 【参考】シミュレータを起動（別ターミナル）
+新しいターミナルを開いて、以下を実行します。
+
+source ~/g1_venv/bin/activate cd ~/unitree_mujoco/simulate_python python3 unitree_mujoco.py
+
+シミュレータウィンドウが開き、G1のモデルが表示されます。
+
+4.2 プログラムを実行（元のターミナル）
+最初のターミナルに戻って、以下を実行します。
+
+cd ~/g1_hackathon python3 walk_demo.py
+
+4.3 期待される動作
+以下のメッセージが表示され、シミュレータ上のG1が動きます。
+
+  === シミュレータモード ===
+  G1と接続しました
+  [1/4] 立ち上がります...
+  [2/4] 前に歩きます...
+  [3/4] 停止します...
+  [4/4] しゃがみます...
+  === 完了 ===
+
+⚠️ シミュレータと実機は完全には同じ動きをしません。シミュレータでOKでも、実機では調整が必要な場合があります。
+
+
+5. 実機で実行する
+🚨 実機で実行する前に、必ず安全ガイドラインを読み、緊急停止コマンド（L1+A / L2+B）を覚えてください。
+
+5.1 G1との接続
+① G1の電源を入れ、起動完了まで待つ（約1分）
+② 開発PCとG1をLANケーブルで接続
+③ 開発PCのIPアドレスを設定（まだの場合）
+
+sudo ip addr add 192.168.123.99/24 dev eth0
+
+④ 接続確認
+
+ping 192.168.123.164
+
+「64 bytes from 192.168.123.164」と表示されれば接続OK。Ctrl+Cで終了。
+
+5.2 実機でプログラムを実行
+【重要】G1が立ち上がれる状態であることを確認してから実行！
+
+cd ~/g1_hackathon python3 walk_demo.py eth0
+
+eth0 を引数に渡すと実機モードになります。
+
+⚠️ eth0 はネットワークインターフェース名です。環境によって enp3s0 や ens33 の場合もあります。ip a コマンドで確認してください。
+
+
+6. コードの意味を理解する
+プログラムの各部分を解説します。
+
+6.1 初期化部分
+ChannelFactoryInitialize(1, "lo")   # シミュレータ ChannelFactoryInitialize(0, "eth0") # 実機
+
+• 第1引数: domain_id（1=シミュレータ、0=実機）
+• 第2引数: ネットワークインターフェース（lo=ローカル、eth0=有線LAN）
+
+6.2 LocoClientの初期化
+client = LocoClient() client.SetTimeout(10.0) client.Init()
+
+• LocoClient: G1の歩行を制御するクラス
+• SetTimeout: 通信タイムアウト時間を設定
+• Init: G1との通信を開始
+
+6.3 歩行制御
+client.Move(vx, vy, vyaw)
+
+パラメータ
+意味
+単位
+例
+vx
+前後速度（+前進、-後退）
+m/s
+0.3で前進
+vy
+左右速度（+左、-右）
+m/s
+0.2で左移動
+vyaw
+旋回速度（+左回り）
+rad/s
+0.3で左旋回
+
+🚨 重要: Move()を呼んだ後は必ず Move(0, 0, 0) で停止させてください。停止コマンドを忘れるとG1が歩き続けます！
+
+
+7. もっと動かしてみよう
+コピペで使えるサンプルコードを紹介します。
+
+7.1 手を振るプログラム
+#!/usr/bin/env python3 """手を振るプログラム""" import sys import time from unitree_sdk2py.core.channel import ChannelFactoryInitialize from unitree_sdk2py.g1.loco.g1_loco_client import LocoClient  def main():     if len(sys.argv) < 2:         ChannelFactoryInitialize(1, "lo")     else:         ChannelFactoryInitialize(0, sys.argv[1])      client = LocoClient()     client.SetTimeout(10.0)     client.Init()      # 立ち上がり     client.Squat2StandUp()     time.sleep(3)      # 手を振る     print("手を振ります...")     client.WaveHand()     time.sleep(3)      # しゃがむ     client.StandUp2Squat()     print("完了")  if __name__ == "__main__":     main()
+
+7.2 四角形を歩くプログラム
+#!/usr/bin/env python3 """四角形を歩くプログラム""" import sys import time from unitree_sdk2py.core.channel import ChannelFactoryInitialize from unitree_sdk2py.g1.loco.g1_loco_client import LocoClient  def main():     if len(sys.argv) < 2:         ChannelFactoryInitialize(1, "lo")     else:         ChannelFactoryInitialize(0, sys.argv[1])      client = LocoClient()     client.SetTimeout(10.0)     client.Init()      client.Squat2StandUp()     time.sleep(3)      # 四角形を歩く（4回繰り返し）     for i in range(4):         print(f"辺 {i+1}/4: 前進...")         client.Move(0.2, 0, 0)         time.sleep(2)         client.Move(0, 0, 0)         time.sleep(0.5)          print(f"角 {i+1}/4: 左に90度回転...")         client.Move(0, 0, 0.5)  # 左旋回         time.sleep(1.5)  # 約90度         client.Move(0, 0, 0)         time.sleep(0.5)      client.StandUp2Squat()     print("完了")  if __name__ == "__main__":     main()
+
+
+8. 使えるコマンド一覧
+LocoClientで使える全コマンドです。
+
+メソッド
+説明
+使用例
+Squat2StandUp()
+しゃがみ姿勢から立ち上がる。起動直後に最初に呼ぶ。
+client.Squat2StandUp()
+StandUp2Squat()
+立った状態からしゃがむ。プログラム終了時に呼ぶ。
+client.StandUp2Squat()
+Move(vx, vy, vyaw)
+歩行させる。vx=前後、vy=左右、vyaw=回転（単位: m/s, rad/s）
+client.Move(0.3, 0, 0)
+HighStand()
+背筋を伸ばして高い姿勢で立つ。堂々とした印象に。
+client.HighStand()
+LowStand()
+膝を曲げて低い姿勢で立つ。安定感が増す。
+client.LowStand()
+Damp()
+全関節の力を抜いて脱力する。緊急停止や転倒回避に使用。
+client.Damp()
+WaveHand()
+片手を上げて振る。挨拶やアピールに。
+client.WaveHand()
+WaveHand(True)
+振り返りながら手を振る。お見送りに。
+client.WaveHand(True)
+ShakeHand()
+握手するように手を差し出す。来客対応に。
+client.ShakeHand()
+ZeroTorque()
+全関節のモーターを停止。Damp()と違い完全に無力化。
+client.ZeroTorque()
+Lie2StandUp()
+仰向け・うつ伏せ状態から起き上がる。転倒後の復帰に。
+client.Lie2StandUp()
+BalanceStand()
+バランスを取りながら立つ。外力に対して姿勢を維持。
+client.BalanceStand()
+
+9. よくあるエラーと解決策
+エラー
+解決策
+ModuleNotFoundError
+仮想環境を有効化: source ~/g1_venv/bin/activate
+Connection timeout
+シミュレータが起動しているか確認 / G1の電源を確認
+Move()で動かない
+g1_loco_client.py に self.Start() を追加（既知のバグ）
+Permission denied
+sudo を付けてIP設定を実行
+ネットワークインターフェース不明
+ip a で確認（eth0, enp3s0 など）
+G1が反応しない
+G1が「運動制御開始」状態か確認（リモコンでR1+X / R2+A）
+
+10. 発展：他に何ができる？
+基本的な歩行制御を覚えたら、以下にもチャレンジしてみましょう。
+
+センサーを使う
+• RGB-Dカメラ（Intel RealSense D435i）で画像認識
+• 3D LiDAR（Livox Mid-360）で周囲の環境をスキャン
+• IMUで姿勢情報を取得
+
+音声機能を使う
+• マイクアレイで音声認識
+• スピーカーで音声出力（日本語はEdge-TTSで対応）
+
+ROS 2連携
+• ROS 2 Humbleと連携して高度な制御
+• SLAM、ナビゲーション、物体認識など
+
+低レベル制御
+• 個別関節の直接制御（上級者向け）
+• カスタムモーションの作成
+
+
+11. G1に日本語で話させよう
+G1には内蔵スピーカーがあり、日本語で話させることができます。
+ここでは Edge-TTS（Microsoft製の無料音声合成）を使う方法を紹介します。
+
+11.1 Edge-TTSのインストール
+仮想環境で以下を実行します（コピペでOK）
+
+pip install edge-tts pygame
+
+11.2 話させるプログラム
+G1が日本語で話すプログラムです。
+
+#!/usr/bin/env python3 """G1に日本語で話させるプログラム""" import asyncio import edge_tts import pygame import os  async def speak(text, voice="ja-JP-NanamiNeural"):     """テキストを音声で読み上げる"""     # 音声ファイルを生成     output_file = "/tmp/g1_speech.mp3"     communicate = edge_tts.Communicate(text, voice)     await communicate.save(output_file)      # 音声を再生     pygame.mixer.init()     pygame.mixer.music.load(output_file)     pygame.mixer.music.play()      # 再生が終わるまで待つ     while pygame.mixer.music.get_busy():         await asyncio.sleep(0.1)      pygame.mixer.quit()     os.remove(output_file)  async def main():     print("G1が話します...")      # 好きなセリフを入れてください     await speak("こんにちは！私はG1です。今日も一緒に頑張りましょう！")     await speak("何かお手伝いできることはありますか？")      print("完了")  if __name__ == "__main__":     asyncio.run(main())
+
+11.3 実行方法
+上記を speak_demo.py として保存し、以下で実行します。
+
+python3 speak_demo.py
+
+11.4 使える日本語音声
+音声ID
+特徴
+ja-JP-NanamiNeural
+女性・明るい（デフォルト）
+ja-JP-KeitaNeural
+男性・落ち着いた
+ja-JP-AoiNeural
+女性・若い
+ja-JP-DaichiNeural
+男性・若い
+
+11.5 歩行と会話を組み合わせる
+歩行制御と音声を組み合わせた例です。
+
+#!/usr/bin/env python3 """歩きながら話すG1""" import sys import time import asyncio import edge_tts import pygame import os from unitree_sdk2py.core.channel import ChannelFactoryInitialize from unitree_sdk2py.g1.loco.g1_loco_client import LocoClient  async def speak(text, voice="ja-JP-NanamiNeural"):     output_file = "/tmp/g1_speech.mp3"     communicate = edge_tts.Communicate(text, voice)     await communicate.save(output_file)     pygame.mixer.init()     pygame.mixer.music.load(output_file)     pygame.mixer.music.play()     while pygame.mixer.music.get_busy():         await asyncio.sleep(0.1)     pygame.mixer.quit()     os.remove(output_file)  async def main():     # 初期化     if len(sys.argv) < 2:         ChannelFactoryInitialize(1, "lo")     else:         ChannelFactoryInitialize(0, sys.argv[1])      client = LocoClient()     client.SetTimeout(10.0)     client.Init()      # 立ち上がって挨拶     await speak("こんにちは！今から歩いてみせますね。")     client.Squat2StandUp()     time.sleep(3)      # 歩きながら話す     await speak("では、前に歩きます。")     client.Move(0.2, 0, 0)     time.sleep(2)     client.Move(0, 0, 0)      await speak("上手に歩けましたか？またね！")     client.StandUp2Squat()  if __name__ == "__main__":     asyncio.run(main())
+
+💡 ヒント: チームのG1に名前をつけて、「私は○○です」と自己紹介させてみましょう！
+
+
+12. 参考リンク集
+公式ドキュメント
+• G1 SDK Development Guide
+  https://support.unitree.com/home/en/G1_developer
+
+GitHubリポジトリ
+• unitree_sdk2_python（Python SDK）
+  https://github.com/unitreerobotics/unitree_sdk2_python
+
+• unitree_mujoco（シミュレータ）
+  https://github.com/unitreerobotics/unitree_mujoco
+
+サンプルコード
+• SDK内のサンプル: unitree_sdk2_python/example/g1/
+  - high_level/g1_loco_client_example.py（歩行制御）
+  - low_level/g1_lowlevel_example.py（関節制御）
+  - audio/（音声関連）
+
+動画チュートリアル
+• sentdex G1シリーズ（YouTube）
+  https://www.youtube.com/results?search_query=sentdex+unitree+g1
+
+
+13. 用語集（プログラミング基礎）
+このドキュメントで使用しているプログラミング用語を解説します。
+
+用語
+意味
+ターミナル
+コマンド（命令文）を入力してコンピュータを操作する画面。黒い画面に文字を打ち込む。
+コマンド
+コンピュータに対する命令。ターミナルに入力して実行する。
+スクリプト
+プログラムのこと。Pythonファイル（.py）のこともスクリプトと呼ぶ。
+関数（かんすう）
+特定の処理をまとめたもの。def main(): のように定義する。
+メソッド
+クラスに属する関数。client.Move() の Move() の部分。
+クラス
+データと処理をまとめた設計図。LocoClient がクラスの例。
+インスタンス
+クラスから作られた実体。client = LocoClient() の client のこと。
+引数（ひきすう）
+関数やメソッドに渡す値。Move(0.3, 0, 0) の 0.3, 0, 0 が引数。
+戻り値（もどりち）
+関数やメソッドが返す結果の値。
+変数（へんすう）
+データを入れる箱。client = LocoClient() の client が変数。
+import
+他のファイルやライブラリの機能を読み込む命令。
+ライブラリ
+便利な機能をまとめたプログラム集。unitree_sdk2py がライブラリ。
+SDK
+Software Development Kit。開発に必要なツールやライブラリのセット。
+API
+Application Programming Interface。プログラムから機能を呼び出す仕組み。
+仮想環境
+プロジェクトごとにライブラリを分離する仕組み。(g1_venv) のこと。
+pip
+Pythonのライブラリをインストールするコマンド。
+async / await
+非同期処理。処理の完了を待ちながら他の処理も進める仕組み。
+domain_id
+DDS通信で使う識別番号。シミュレータ=1、実機=0。
+インターフェース
+ネットワーク接続口。eth0, lo などの名前がつく。
+タイムアウト
+一定時間内に応答がない場合にエラーにする仕組み。
+
+
+RobotMateHub | ロボットと生きる未来をデザインするハッカソン
