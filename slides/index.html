@@ -480,7 +480,59 @@
                     <p>ありがとうございました。</p>
                 </div>
             </div>
-            <div class="slide-number">12 / 12</div>
+            <div class="slide-number">12 / 13</div>
+        </div>
+
+        <!-- スライド13: 補足 — モーション生成パイプライン -->
+        <div class="slide">
+            <div class="content">
+                <h2 style="font-size: 1.6rem;">補足：モーション生成パイプライン</h2>
+                <p style="text-align: center; font-size: 1rem; color: #666; margin: 0.6rem 0 1rem;">
+                    おもてなしの所作をロボットに実装するのは難しい。<br>
+                    <span class="emphasis">→ 人の動画からモーションを自動生成する仕組みを構築。</span>
+                </p>
+                <div style="display: flex; gap: 2rem; align-items: flex-start; margin-top: 0;">
+                    <!-- 動画 -->
+                    <div style="flex: 2;">
+                        <video
+                            src="human2unitreeg1.mp4"
+                            controls
+                            style="width: 100%; border-radius: 8px; border: 1px solid #ccc;"
+                        ></video>
+                    </div>
+                    <!-- フロー図 -->
+                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; padding-top: 0.5rem; font-size: 1rem;">
+                        <div style="padding: 0.6rem 1.2rem; background: rgba(139,115,85,0.15); border: 1px solid #8b7355; border-radius: 8px; text-align: center;">
+                            mp4 動画
+                        </div>
+                        <div style="color: #8b7355; font-size: 0.85rem; text-align: center;">
+                            ↓ &nbsp;Step 1–2: GEM-X
+                        </div>
+                        <div style="padding: 0.6rem 1.2rem; background: rgba(139,115,85,0.15); border: 1px solid #8b7355; border-radius: 8px; text-align: center;">
+                            SOMA BVH<br>
+                            <span style="font-size: 0.85rem; color: #777;">（77関節 3Dポーズ）</span>
+                        </div>
+                        <div style="color: #8b7355; font-size: 0.85rem; text-align: center;">
+                            ↓ &nbsp;Step 3–4: SOMA Retargeter
+                        </div>
+                        <div style="padding: 0.6rem 1.2rem; background: rgba(139,115,85,0.15); border: 1px solid #8b7355; border-radius: 8px; text-align: center;">
+                            G1 関節 CSV<br>
+                            <span style="font-size: 0.85rem; color: #777;">（29 DOF）</span>
+                        </div>
+                        <div style="margin-top: 1rem; font-size: 0.85rem; color: #555; text-align: center; line-height: 1.7;">
+                            を行う Colaboratory を構築し GitHub に公開。
+                        </div>
+                        <div style="margin-top: 0.6rem; font-size: 0.8rem; color: #8b7355; text-align: center;">
+                            参考：<a href="https://github.com/NVlabs/GEM-X" target="_blank" style="color: #8b7355;">github.com/NVlabs/GEM-X</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 注記：中央ボトム -->
+            <div style="position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); font-size: 0.85rem; color: #999; white-space: nowrap;">
+                ※ 今回は安定性が確保できず実機動作は断念。
+            </div>
+            <div class="slide-number">補足 13 / 13</div>
         </div>
     </div>
 
