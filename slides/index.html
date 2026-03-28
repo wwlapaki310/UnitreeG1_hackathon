@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>和のココロ - ロボットと生きる未来をデザイン</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+            background: linear-gradient(135deg, #f5f5f0 0%, #e8e8e0 100%);
+            color: #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 和紙のテクスチャ風背景 */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.1) 35px, rgba(255,255,255,.1) 70px),
+                repeating-linear-gradient(-45deg, transparent, transparent 35px, rgba(255,255,255,.05) 35px, rgba(255,255,255,.05) 70px);
+            pointer-events: none;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+        }
+
+        .slide {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .slide.active {
+            display: block;
+            opacity: 1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #2c3e50;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #34495e;
+            font-weight: 400;
+            letter-spacing: 0.08em;
+            text-align: center;
+            position: relative;
+            padding-bottom: 0.8rem;
+        }
+
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #8b7355, transparent);
+        }
+
+        .content {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: #555;
+            text-align: left;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .center-content {
+            text-align: center;
+        }
+
+        .highlight {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            font-weight: 600;
+            margin: 1.5rem 0;
+            text-align: center;
+            letter-spacing: 0.05em;
+        }
+
+        .team-name {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: linear-gradient(135deg, #8b7355, #a08968);
+            color: white;
+            border-radius: 20px;
+            margin: 0 0.3rem;
+            font-weight: 500;
+        }
+
+        .concept-text {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            text-align: center;
+            margin: 2rem 0;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+        }
+
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .tech-list li {
+            margin: 1rem 0;
+            padding-left: 1.8rem;
+            position: relative;
+            font-size: 1.15rem;
+        }
+
+        .tech-list li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #8b7355;
+        }
+
+        .quote {
+            font-style: italic;
+            padding: 1.2rem 1.8rem;
+            margin: 1.5rem 0;
+            border-left: 3px solid #8b7355;
+            background: rgba(255,255,255,0.3);
+            border-radius: 0 8px 8px 0;
+            font-size: 1.1rem;
+        }
+
+        .emphasis {
+            background: linear-gradient(transparent 60%, rgba(139,115,85,0.2) 60%);
+            padding: 0 0.2rem;
+            font-weight: 500;
+        }
+
+        /* スライド番号 */
+        .slide-number {
+            position: absolute;
+            bottom: 25px;
+            right: 25px;
+            color: #999;
+            font-size: 0.9rem;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+
+        /* スライドインジケーター */
+        .slide-indicator {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+
+        .indicator-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(139, 115, 85, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .indicator-dot:hover {
+            background: rgba(139, 115, 85, 0.5);
+            transform: scale(1.2);
+        }
+
+        .indicator-dot.active {
+            background: #8b7355;
+            transform: scale(1.3);
+        }
+
+        /* ナビゲーションヒント */
+        .nav-hint {
+            position: absolute;
+            bottom: 55px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #999;
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+
+        /* タイトルスライド用 */
+        .title-slide {
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.6rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        /* 締めのスライド */
+        .closing-slide {
+            text-align: center;
+        }
+
+        .clap-action {
+            font-size: 1.6rem;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(139,115,85,0.1);
+            border-radius: 12px;
+            border: 2px solid #8b7355;
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide.active .content > * {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .slide.active .content > *:nth-child(1) { animation-delay: 0.1s; }
+        .slide.active .content > *:nth-child(2) { animation-delay: 0.2s; }
+        .slide.active .content > *:nth-child(3) { animation-delay: 0.3s; }
+        .slide.active .content > *:nth-child(4) { animation-delay: 0.4s; }
+        .slide.active .content > *:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- スライド1: タイトル -->
+        <div class="slide active">
+            <div class="content title-slide">
+                <h1>和のココロ</h1>
+                <p class="subtitle">ロボットと生きる未来をデザインする</p>
+                <div class="concept-text">
+                    和の所作と会話で、<br>
+                    <span class="emphasis">"ちょっと嬉しい"</span>を届けるロボット
+                </div>
+            </div>
+            <div class="slide-number">1 / 12</div>
+        </div>
+
+        <!-- スライド2: 導入1 -->
+        <div class="slide">
+            <div class="content">
+                <h2>想像してみてください</h2>
+                <p style="text-align: center; font-size: 1.3rem; line-height: 2.2;">
+                    長い1日を終えて、ようやく家に帰ってきたとき。
+                </p>
+                <p style="text-align: center; font-size: 1.3rem; line-height: 2.2; margin-top: 1.5rem;">
+                    玄関を開けた瞬間に、誰かがこちらに気づいて、
+                </p>
+                <div class="quote" style="margin: 2rem auto; max-width: 600px;">
+                    「おかえりなさい」<br>
+                    「今日もおつかれさまです」
+                </div>
+                <p style="text-align: center; font-size: 1.3rem; margin-top: 1.5rem;">
+                    と、静かに迎えてくれたら。
+                </p>
+            </div>
+            <div class="slide-number">2 / 12</div>
+        </div>
+
+        <!-- スライド3: 導入2 -->
+        <div class="slide">
+            <div class="content center-content">
+                <h2>小さな気遣いの価値</h2>
+                <p style="font-size: 1.3rem; margin: 2rem 0;">
+                    それだけで、少し気持ちがほどける。<br>
+                    そんな経験はないでしょうか。
+                </p>
+                <div class="highlight" style="margin: 3rem 0;">
+                    "自分でもできるけれど、<br>
+                    やってもらえたら嬉しいこと"
+                </div>
+                <p style="font-size: 1.2rem;">
+                    そこに大きな価値があると考えました。
+                </p>
+            </div>
+            <div class="slide-number">3 / 12</div>
+        </div>
+
+        <!-- スライド4: コンセプト1 -->
+        <div class="slide">
+            <div class="content center-content">
+                <h2>私たちのコンセプト</h2>
+                <p class="highlight">
+                    <span class="team-name">和のココロ</span>が提案するのは
+                </p>
+                <div class="concept-text" style="margin: 3rem 0;">
+                    和の所作と会話で、<br>
+                    <span class="emphasis">"ちょっと嬉しい"</span>を届けるロボット
+                </div>
+                <p style="font-size: 1.2rem;">これは、効率化のためのロボットではありません。</p>
+            </div>
+            <div class="slide-number">4 / 12</div>
+        </div>
+
+        <!-- スライド5: コンセプト2 -->
+        <div class="slide">
+            <div class="content center-content">
+                <h2>心をほどくロボット</h2>
+                <p class="highlight">
+                    私たちが目指したのは、<br>
+                    <span class="emphasis">心をほどくため</span>のロボット
+                </p>
+                <div style="margin: 2.5rem auto; padding: 1.5rem; background: rgba(255,255,255,0.5); border-radius: 10px; max-width: 650px;">
+                    <p style="font-size: 1.15rem;"><strong>おもてなし</strong>とは、</p>
+                    <p style="margin-top: 1rem; line-height: 2;">相手の状態に気づき、言葉をかけ、<br>
+                    所作で気遣いを伝え、<br>
+                    その人の時間を少し心地よくすること</p>
+                </div>
+            </div>
+            <div class="slide-number">5 / 12</div>
+        </div>
+
+        <!-- スライド6: デモ1 -->
+        <div class="slide">
+            <div class="content">
+                <h2>帰宅後の体験</h2>
+                <p class="highlight">「お出迎え」</p>
+                <ul class="tech-list">
+                    <li>接近を感知し、身体を整えて一礼</li>
+                    <li>「おかえりなさいませ。今日もおつかれさまでした」</li>
+                </ul>
+                <div class="quote" style="margin-top: 2rem;">
+                    単なる機械ではなく、<br>
+                    こちらの存在を認識して迎えてくれる存在
+                </div>
+            </div>
+            <div class="slide-number">6 / 12</div>
+        </div>
+
+        <!-- スライド7: デモ2 -->
+        <div class="slide">
+            <div class="content">
+                <h2>おもてなしの所作</h2>
+                <p class="highlight">「お茶の心」</p>
+                <ul class="tech-list">
+                    <li>正座して、茶筅を使ったお点前の動作</li>
+                    <li>相手のためにひと手間をかける所作の表現</li>
+                </ul>
+                <p style="text-align: center; margin-top: 2rem; font-size: 1.2rem;">
+                    本物の抹茶を作ることが目的ではなく、<br>
+                    <span class="emphasis">気遣いの所作そのもの</span>を表現
+                </p>
+            </div>
+            <div class="slide-number">7 / 12</div>
+        </div>
+
+        <!-- スライド8: デモ3 -->
+        <div class="slide">
+            <div class="content">
+                <h2>心に寄り添う会話</h2>
+                <p class="highlight" style="margin-bottom: 2rem;">「今日はどんな一日でしたか？」</p>
+                <div style="background: rgba(255,255,255,0.5); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
+                    <p>ユーザー：「ちょっと疲れた」</p>
+                    <p style="margin-top: 1rem;">G1：「それは大変でしたね。<br>でも、今日も本当におつかれさまでした」</p>
+                </div>
+                <p style="text-align: center; margin-top: 2rem;">
+                    単なるQ&Aではなく、<br>
+                    <span class="emphasis">少し気が抜けて、少し安心できる会話</span>
+                </p>
+            </div>
+            <div class="slide-number">8 / 12</div>
+        </div>
+
+        <!-- スライド9: 技術 -->
+        <div class="slide">
+            <div class="content">
+                <h2>技術構成</h2>
+                <ul class="tech-list">
+                    <li><strong>音声認識：</strong>Whisper - 日本語の自然な会話</li>
+                    <li><strong>会話生成：</strong>Ollama ローカルLLM - 励まし、気遣い</li>
+                    <li><strong>音声出力：</strong>VOICEVOX - 親しみやすい音声</li>
+                    <li><strong>動作制御：</strong>Unitree G1 SDK - 全身の協調動作</li>
+                </ul>
+                <div class="highlight" style="margin-top: 2rem;">
+                    <span class="emphasis">humanoidだからこそ</span>、<br>
+                    礼や間や所作が、言葉以上の意味を持つ
+                </div>
+            </div>
+            <div class="slide-number">9 / 12</div>
+        </div>
+
+        <!-- スライド10: 価値1 -->
+        <div class="slide">
+            <div class="content center-content">
+                <h2>新しい価値の提案</h2>
+                <div style="display: flex; justify-content: space-around; margin: 2.5rem 0;">
+                    <div style="flex: 1; padding: 1rem;">
+                        <p style="font-size: 1rem; color: #888;">従来のロボット</p>
+                        <p class="emphasis" style="font-size: 1.3rem;">効率化</p>
+                        <p style="margin-top: 1rem;">掃除、搬送、警備</p>
+                    </div>
+                    <div style="flex: 1; padding: 1rem;">
+                        <p style="font-size: 1rem; color: #888;">和のココロ</p>
+                        <p class="emphasis" style="font-size: 1.3rem;">心の気遣い</p>
+                        <p style="margin-top: 1rem;">迎える、労う、和ませる</p>
+                    </div>
+                </div>
+                <div class="quote" style="max-width: 600px; margin: 2rem auto;">
+                    "やらなくていいこと"ではなく、<br>
+                    <span class="emphasis">"やってくれたら嬉しいこと"</span>にこそ価値がある
+                </div>
+            </div>
+            <div class="slide-number">10 / 12</div>
+        </div>
+
+        <!-- スライド11: 価値2 -->
+        <div class="slide">
+            <div class="content center-content">
+                <h2>日本ならではの価値観</h2>
+                <p class="highlight" style="margin: 2.5rem 0;">
+                    日本の「おもてなし」を<br>
+                    ロボットの振る舞いと体験設計そのものに落とし込みました
+                </p>
+                <div class="concept-text">
+                    ロボットが人の仕事を助ける時代から、<br>
+                    <span class="emphasis">ロボットが人の心を気遣う時代へ</span>
+                </div>
+            </div>
+            <div class="slide-number">11 / 12</div>
+        </div>
+
+        <!-- スライド12: 締め -->
+        <div class="slide">
+            <div class="content closing-slide">
+                <h2>ロボットと生きる未来へ</h2>
+                <p style="font-size: 1.4rem; margin: 2.5rem 0; line-height: 2;">
+                    便利だから一緒にいるのではなく、<br>
+                    <span class="emphasis">いてくれると、ちょっと嬉しい。</span><br>
+                    そんなロボットとの関係を提案します。
+                </p>
+                <div class="clap-action">
+                    <p>お手を拝借。</p>
+                    <p style="font-size: 2.2rem; margin: 1rem 0;">👏</p>
+                    <p>ありがとうございました。</p>
+                </div>
+            </div>
+            <div class="slide-number">12 / 12</div>
+        </div>
+    </div>
+
+    <div class="nav-hint">← → キーで操作 / スペースで次へ</div>
+
+    <!-- スライドインジケーター -->
+    <div class="slide-indicator" id="slideIndicator"></div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const slideIndicator = document.getElementById('slideIndicator');
+
+        // インジケーターを作成
+        function createIndicators() {
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'indicator-dot';
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => showSlide(i));
+                slideIndicator.appendChild(dot);
+            }
+        }
+
+        function updateIndicators() {
+            const dots = document.querySelectorAll('.indicator-dot');
+            dots.forEach((dot, index) => {
+                if (index === currentSlide) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+            
+            currentSlide = index;
+            slides[currentSlide].classList.add('active');
+            updateIndicators();
+        }
+
+        // キーボード操作
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowRight':
+                case ' ':
+                    showSlide(currentSlide + 1);
+                    break;
+                case 'ArrowLeft':
+                    showSlide(currentSlide - 1);
+                    break;
+                case 'Home':
+                    showSlide(0);
+                    break;
+                case 'End':
+                    showSlide(totalSlides - 1);
+                    break;
+            }
+        });
+
+        // タッチ/スワイプ操作（モバイル対応）
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                showSlide(currentSlide + 1);
+            }
+            if (touchEndX > touchStartX + 50) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // クリックでも進む
+        document.addEventListener('click', (e) => {
+            // インジケーターのクリックは除外
+            if (e.target.classList.contains('indicator-dot')) {
+                return;
+            }
+            if (e.clientX > window.innerWidth / 2) {
+                showSlide(currentSlide + 1);
+            } else {
+                showSlide(currentSlide - 1);
+            }
+        });
+
+        // 初期化時にインジケーターを作成
+        createIndicators();
+    </script>
+</body>
+</html>
