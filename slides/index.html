@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>和のココロ - ロボットと生きる未来をデザイン</title>
+    <title>和のココロ - 茶之助 | ロボットと生きる未来をデザイン</title>
     <style>
         * {
             margin: 0;
@@ -162,6 +162,223 @@
             font-weight: 500;
         }
 
+        /* デモスライド用写真（6/12・7/12）— h2 なし・画像大きめ */
+        .slide-demo-img {
+            display: block;
+            width: 100%;
+            max-width: min(820px, 96vw);
+            max-height: 46vh;
+            height: auto;
+            object-fit: contain;
+            margin: 0.5rem auto 0.85rem;
+        }
+
+        .content--demo-photo > .highlight:first-child {
+            margin-top: 0;
+        }
+
+        .content--demo-photo .highlight {
+            margin: 0.5rem 0 0.45rem;
+        }
+
+        .content--demo-photo .tech-list {
+            margin: 0.65rem 0;
+        }
+
+        .content--demo-photo .tech-list li {
+            margin: 0.45rem 0;
+            font-size: 1.05rem;
+        }
+
+        .content--demo-photo .quote {
+            margin-top: 0.75rem;
+            padding: 1rem 1.35rem;
+            font-size: 1.02rem;
+        }
+
+        /* ペットロボ比較スライド */
+        .compare-visual-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.85rem;
+            align-items: end;
+            max-width: 900px;
+            margin: 0 auto 0.65rem;
+        }
+
+        .compare-visual-col {
+            text-align: center;
+            min-width: 0;
+        }
+
+        .compare-visual-img {
+            display: block;
+            width: 100%;
+            max-height: 20vh;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+
+        .compare-visual-label {
+            font-size: 0.78rem;
+            color: #666;
+            margin-top: 0.35rem;
+            line-height: 1.35;
+        }
+
+        @media (max-width: 560px) {
+            .compare-visual-row {
+                grid-template-columns: 1fr;
+            }
+            .compare-visual-img {
+                max-height: 18vh;
+            }
+        }
+
+        .compare-slide .compare-caption {
+            font-size: 0.82rem;
+            color: #777;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .compare-table-wrap {
+            overflow-x: auto;
+            margin-top: 0.5rem;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        .compare-table th,
+        .compare-table td {
+            border: 1px solid rgba(139, 115, 85, 0.35);
+            padding: 0.45rem 0.55rem;
+            vertical-align: top;
+        }
+
+        .compare-table th {
+            background: rgba(139, 115, 85, 0.12);
+            font-weight: 600;
+            color: #3d4f5f;
+        }
+
+        .compare-table td:first-child {
+            font-weight: 600;
+            color: #5c4a3a;
+            width: 22%;
+        }
+
+        /* SOMA 動画グリッド */
+        .soma-slide h2 {
+            margin-bottom: 0.85rem;
+        }
+
+        .soma-video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+            align-items: start;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .soma-video-item {
+            text-align: center;
+        }
+
+        .soma-video-item video {
+            width: 100%;
+            max-height: 28vh;
+            border-radius: 6px;
+            background: #000;
+        }
+
+        .soma-video-item .soma-label {
+            font-size: 0.78rem;
+            color: #666;
+            margin-top: 0.35rem;
+            line-height: 1.35;
+        }
+
+        @media (max-width: 640px) {
+            .soma-video-grid {
+                grid-template-columns: 1fr;
+            }
+            .soma-video-item video {
+                max-height: 24vh;
+            }
+        }
+
+        /* 声色ワークフロー */
+        .voice-flow-slide .voice-flow {
+            font-size: 0.82rem;
+            line-height: 1.5;
+            max-width: 720px;
+            margin: 0.75rem auto 0;
+            text-align: left;
+        }
+
+        .voice-flow-box {
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(139, 115, 85, 0.35);
+            border-radius: 8px;
+            padding: 0.55rem 0.75rem;
+            margin: 0 auto;
+            text-align: center;
+            max-width: 420px;
+        }
+
+        .voice-flow-arrow-down {
+            text-align: center;
+            color: #8b7355;
+            padding: 0.15rem 0;
+            font-size: 1rem;
+        }
+
+        .voice-flow-branch {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.4rem;
+            max-width: 560px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 600px) {
+            .voice-flow-branch {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .voice-flow-leaf {
+            background: rgba(139, 115, 85, 0.1);
+            border-radius: 6px;
+            padding: 0.4rem 0.35rem;
+            text-align: center;
+            font-size: 0.78rem;
+        }
+
+        .voice-flow-leaf code {
+            font-family: ui-monospace, monospace;
+            font-size: 0.72rem;
+        }
+
+        .state-estimate-img {
+            display: block;
+            width: 100%;
+            max-width: min(820px, 96vw);
+            max-height: 58vh;
+            height: auto;
+            object-fit: contain;
+            margin: 0.5rem auto 0;
+        }
+
         /* スライド番号 */
         .slide-number {
             position: absolute;
@@ -229,6 +446,55 @@
             margin-bottom: 2rem;
         }
 
+        .robot-character-name {
+            font-size: 1.85rem;
+            color: #5c4a3a;
+            letter-spacing: 0.25em;
+            margin-bottom: 0.6rem;
+            font-weight: 500;
+        }
+
+        /* チーム紹介スライド */
+        .team-credits {
+            text-align: center;
+            max-width: 640px;
+        }
+
+        .team-credits .team-credits-team {
+            font-size: 1.12rem;
+            color: #666;
+            letter-spacing: 0.08em;
+            margin-bottom: 1.75rem;
+        }
+
+        .team-credit-block {
+            text-align: left;
+            margin: 1.2rem 0;
+            padding-left: 1rem;
+            border-left: 3px solid rgba(139, 115, 85, 0.45);
+        }
+
+        .team-credit-block .role {
+            font-size: 0.92rem;
+            color: #8b7355;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            margin-bottom: 0.35rem;
+        }
+
+        .team-credit-block .detail {
+            font-size: 1.06rem;
+            line-height: 1.65;
+            color: #444;
+        }
+
+        .team-credit-block .affil {
+            display: block;
+            font-size: 0.94rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+
         /* 締めのスライド */
         .closing-slide {
             text-align: center;
@@ -272,14 +538,15 @@
         <!-- スライド1: タイトル -->
         <div class="slide active">
             <div class="content title-slide">
-                <h1>和のココロ</h1>
+                <span class="emphasis">"ちょっと嬉しい"</span>を届けるロボット
+                <h1 class="robot-character-name">「茶之助」</h1>
+                <br><br>
                 <p class="subtitle">ロボットと生きる未来をデザインする</p>
                 <div class="concept-text">
-                    和の所作と会話で、<br>
-                    <span class="emphasis">"ちょっと嬉しい"</span>を届けるロボット
+                    チームE: 和のココロ
                 </div>
             </div>
-            <div class="slide-number">1 / 12</div>
+            <div class="slide-number">1 / 17</div>
         </div>
 
         <!-- スライド2: 導入1 -->
@@ -300,7 +567,7 @@
                     と、静かに迎えてくれたら。
                 </p>
             </div>
-            <div class="slide-number">2 / 12</div>
+            <div class="slide-number">2 / 17</div>
         </div>
 
         <!-- スライド3: 導入2 -->
@@ -319,7 +586,7 @@
                     そこに大きな価値があると考えました。
                 </p>
             </div>
-            <div class="slide-number">3 / 12</div>
+            <div class="slide-number">3 / 17</div>
         </div>
 
         <!-- スライド4: コンセプト1 -->
@@ -330,18 +597,18 @@
                     <span class="team-name">和のココロ</span>が提案するのは
                 </p>
                 <div class="concept-text" style="margin: 3rem 0;">
-                    和の所作と会話で、<br>
-                    <span class="emphasis">"ちょっと嬉しい"</span>を届けるロボット
+                    茶之助が、和の所作と会話で、<br>
+                    <span class="emphasis">"ちょっと嬉しい"</span>を届けるロボット「茶之助」
                 </div>
-                <p style="font-size: 1.2rem;">これは、効率化のためのロボットではありません。</p>
+                <p style="font-size: 1.2rem;">効率化のためのロボットではありません。</p>
             </div>
-            <div class="slide-number">4 / 12</div>
+            <div class="slide-number">4 / 17</div>
         </div>
 
         <!-- スライド5: コンセプト2 -->
         <div class="slide">
             <div class="content center-content">
-                <h2>心をほどくロボット</h2>
+                <h2>心をほどくロボット「茶之助」</h2>
                 <p class="highlight">
                     私たちが目指したのは、<br>
                     <span class="emphasis">心をほどくため</span>のロボット
@@ -353,41 +620,41 @@
                     その人の時間を少し心地よくすること</p>
                 </div>
             </div>
-            <div class="slide-number">5 / 12</div>
+            <div class="slide-number">5 / 17</div>
         </div>
 
         <!-- スライド6: デモ1 -->
         <div class="slide">
-            <div class="content">
-                <h2>帰宅後の体験</h2>
+            <div class="content content--demo-photo">
                 <p class="highlight">「お出迎え」</p>
+                <img class="slide-demo-img" src="images/pray_robot.jpg" alt="茶之助が合掌の所作でお出迎えする様子" loading="lazy">
                 <ul class="tech-list">
                     <li>接近を感知し、身体を整えて一礼</li>
                     <li>「おかえりなさいませ。今日もおつかれさまでした」</li>
                 </ul>
-                <div class="quote" style="margin-top: 2rem;">
+                <div class="quote">
                     単なる機械ではなく、<br>
                     こちらの存在を認識して迎えてくれる存在
                 </div>
             </div>
-            <div class="slide-number">6 / 12</div>
+            <div class="slide-number">6 / 17</div>
         </div>
 
         <!-- スライド7: デモ2 -->
         <div class="slide">
-            <div class="content">
-                <h2>おもてなしの所作</h2>
+            <div class="content content--demo-photo">
                 <p class="highlight">「お茶の心」</p>
+                <img class="slide-demo-img" src="images/tea_robot.jpg" alt="茶之助がお点前の所作をする様子" loading="lazy">
                 <ul class="tech-list">
                     <li>正座して、茶筅を使ったお点前の動作</li>
                     <li>相手のためにひと手間をかける所作の表現</li>
                 </ul>
-                <p style="text-align: center; margin-top: 2rem; font-size: 1.2rem;">
+                <p style="text-align: center; margin-top: 1rem; font-size: 1.1rem;">
                     本物の抹茶を作ることが目的ではなく、<br>
                     <span class="emphasis">気遣いの所作そのもの</span>を表現
                 </p>
             </div>
-            <div class="slide-number">7 / 12</div>
+            <div class="slide-number">7 / 17</div>
         </div>
 
         <!-- スライド8: デモ3 -->
@@ -397,14 +664,14 @@
                 <p class="highlight" style="margin-bottom: 2rem;">「今日はどんな一日でしたか？」</p>
                 <div style="background: rgba(255,255,255,0.5); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0;">
                     <p>ユーザー：「ちょっと疲れた」</p>
-                    <p style="margin-top: 1rem;">G1：「それは大変でしたね。<br>でも、今日も本当におつかれさまでした」</p>
+                    <p style="margin-top: 1rem;">茶之助：「それは大変でしたね。<br>でも、今日も本当におつかれさまでした」</p>
                 </div>
                 <p style="text-align: center; margin-top: 2rem;">
                     単なるQ&Aではなく、<br>
                     <span class="emphasis">少し気が抜けて、少し安心できる会話</span>
                 </p>
             </div>
-            <div class="slide-number">8 / 12</div>
+            <div class="slide-number">8 / 17</div>
         </div>
 
         <!-- スライド9: 技術 -->
@@ -413,19 +680,76 @@
                 <h2>技術構成</h2>
                 <ul class="tech-list">
                     <li><strong>音声認識：</strong>Whisper - 日本語の自然な会話</li>
-                    <li><strong>会話生成：</strong>Ollama ローカルLLM - 励まし、気遣い</li>
+                    <li><strong>声色・韻律：</strong>librosa（F0 / RMS / MFCC 等）→ ルール集計 → Ollama プロンプトに付加</li>
+                    <li><strong>会話生成：</strong>Ollama ローカルLLM - 励まし、気遣い、文脈に応じた返答</li>
                     <li><strong>音声出力：</strong>VOICEVOX - 親しみやすい音声</li>
-                    <li><strong>動作制御：</strong>Unitree G1 SDK - 全身の協調動作</li>
+                    <li><strong>動作：</strong>SOMA Retargeter で人間骨格を G1 にリターゲット + Unitree G1 SDK</li>
                 </ul>
-                <div class="highlight" style="margin-top: 2rem;">
+            </div>
+            <div class="slide-number">9 / 17</div>
+        </div>
+
+        <!-- スライド10: 状態推定（図解） -->
+        <div class="slide">
+            <div class="content center-content">
+                <h2>声色・韻律による状態推定</h2>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 0.75rem;">感情判定エンジン</p>
+                <img class="state-estimate-img" src="images/emotional_recognition.webp" alt="声色・韻律に基づく状態推定の図解" loading="lazy">
+            </div>
+            <div class="slide-number">10 / 17</div>
+        </div>
+
+        <!-- スライド11: 声色識別ワークフロー -->
+        <div class="slide">
+            <div class="content center-content voice-flow-slide">
+                <h2>声色・韻律による状態推定</h2>
+                <p style="font-size: 0.95rem; color: #666;">録音音声から特徴量を抽出し、ルールで集計。Ollama のプロンプトに付加して文脈ある応答に繋げます。</p>
+                <div class="voice-flow">
+                    <div class="voice-flow-box">録音音声（PCM float32）</div>
+                    <div class="voice-flow-arrow-down">│</div>
+                    <div class="voice-flow-branch">
+                        <div class="voice-flow-leaf"><code>librosa.pyin()</code><br>ピッチ（F0）</div>
+                        <div class="voice-flow-leaf"><code>librosa.feature.rms()</code><br>エネルギー（音量）</div>
+                        <div class="voice-flow-leaf"><code>librosa.feature.mfcc()</code><br>音色特徴量</div>
+                        <div class="voice-flow-leaf">有声区間カウント<br>話速の近似</div>
+                    </div>
+                    <div class="voice-flow-arrow-down">▼</div>
+                    <div class="voice-flow-box">ルールベース集計<br>疲労スコア（0〜10）＋ 感情ラベル</div>
+                    <div class="voice-flow-arrow-down">▼</div>
+                    <div class="voice-flow-box">Ollama のプロンプトに付加</div>
+                    <div class="voice-flow-arrow-down">▼</div>
+                    <div class="voice-flow-box" style="background: rgba(139, 115, 85, 0.12);">文脈を踏まえた返答</div>
+                </div>
+            </div>
+            <div class="slide-number">11 / 17</div>
+        </div>
+
+        <!-- スライド12: SOMA Retargeter 動画 -->
+        <div class="slide slide-soma">
+            <div class="content center-content soma-slide">
+                <h2>SOMA Retargeter</h2>
+                <p style="font-size: 0.95rem; color: #666; max-width: 640px; margin: 0 auto;">
+                    人間の骨格動作を G1 に写しとる
+                </p>
+                <div class="soma-video-grid" id="somaVideoGrid">
+                    <div class="soma-video-item">
+                        <video controls muted playsinline preload="metadata" src="videos/dance_input2output.mp4"></video>
+                        <div class="soma-label">① 入力 → 出力（リターゲット結果）</div>
+                    </div>
+                    <div class="soma-video-item">
+                        <video controls muted playsinline preload="metadata" src="videos/dance_actual_motion.mp4"></video>
+                        <div class="soma-label">② 実機での実行</div>
+                    </div>
+                </div>
+                <div class="highlight" style="margin-top: 1.35rem; max-width: 640px; margin-left: auto; margin-right: auto;">
                     <span class="emphasis">humanoidだからこそ</span>、<br>
                     礼や間や所作が、言葉以上の意味を持つ
                 </div>
             </div>
-            <div class="slide-number">9 / 12</div>
+            <div class="slide-number">12 / 17</div>
         </div>
 
-        <!-- スライド10: 価値1 -->
+        <!-- スライド13: 価値1 -->
         <div class="slide">
             <div class="content center-content">
                 <h2>新しい価値の提案</h2>
@@ -436,7 +760,7 @@
                         <p style="margin-top: 1rem;">掃除、搬送、警備</p>
                     </div>
                     <div style="flex: 1; padding: 1rem;">
-                        <p style="font-size: 1rem; color: #888;">和のココロ</p>
+                        <p style="font-size: 1rem; color: #888;">茶之助</p>
                         <p class="emphasis" style="font-size: 1.3rem;">心の気遣い</p>
                         <p style="margin-top: 1rem;">迎える、労う、和ませる</p>
                     </div>
@@ -446,26 +770,97 @@
                     <span class="emphasis">"やってくれたら嬉しいこと"</span>にこそ価値がある
                 </div>
             </div>
-            <div class="slide-number">10 / 12</div>
+            <div class="slide-number">13 / 17</div>
         </div>
 
-        <!-- スライド11: 価値2 -->
+        <!-- スライド14: 価値2 -->
         <div class="slide">
             <div class="content center-content">
                 <h2>日本ならではの価値観</h2>
                 <p class="highlight" style="margin: 2.5rem 0;">
                     日本の「おもてなし」を<br>
-                    ロボットの振る舞いと体験設計そのものに落とし込みました
+                    振る舞いに落とし込む体験設計を目指しました
                 </p>
                 <div class="concept-text">
                     ロボットが人の仕事を助ける時代から、<br>
                     <span class="emphasis">ロボットが人の心を気遣う時代へ</span>
                 </div>
             </div>
-            <div class="slide-number">11 / 12</div>
+            <div class="slide-number">14 / 17</div>
         </div>
 
-        <!-- スライド12: 締め -->
+        <!-- スライド15: ペットロボとの比較 -->
+        <div class="slide">
+            <div class="content compare-slide">
+                <h2>ペット型ロボとの違い</h2>
+                <div class="compare-visual-row">
+                    <div class="compare-visual-col">
+                        <img class="compare-visual-img" src="images/pet_robot.png" alt="ペット型・癒し系ロボットの一例" loading="lazy">
+                        <p class="compare-visual-label">ペット型・癒し系</p>
+                    </div>
+                    <div class="compare-visual-col">
+                        <img class="compare-visual-img" src="images/tea_robot.jpg" alt="茶之助のお点前所作イメージ" loading="lazy">
+                        <p class="compare-visual-label">茶之助（和のココロ）</p>
+                    </div>
+                </div>
+                <div class="compare-table-wrap">
+                    <table class="compare-table">
+                        <thead>
+                            <tr>
+                                <th>観点</th>
+                                <th>ペット型・癒し系ロボ</th>
+                                <th>茶之助（和のココロ）</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>主な価値</td>
+                                <td>癒し・可愛らしさ・同居の楽しさ</td>
+                                <td>おもてなし、所作の意味、会話の文脈</td>
+                            </tr>
+                            <tr>
+                                <td>身体表現</td>
+                                <td>小型・撫でる・寄り添う動作</td>
+                                <td>ヒューマノイドによる礼・お茶の心・全身の所作</td>
+                            </tr>
+                            <tr>
+                                <td>文化・文脈</td>
+                                <td>限定的</td>
+                                <td>日本のお作法・<span class="emphasis">間</span>を身体で表現</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="slide-number">15 / 17</div>
+        </div>
+
+        <!-- スライド16: チーム紹介 -->
+        <div class="slide">
+            <div class="content center-content team-credits">
+                <h2>チーム紹介</h2>
+                <p class="team-credits-team">チームE · 和のココロ</p>
+                <div class="team-credit-block">
+                    <div class="role">音声・エモーショナルエンジニア</div>
+                    <div class="detail">宮本和樹<span class="affil">明治大学理工学部／スマートメカトロニクス研究室</span></div>
+                </div>
+                <div class="team-credit-block">
+                    <div class="role">モーションエンジニア</div>
+                    <div class="detail">秋田 賢（aki310）<span class="affil">EdgeAIシステムエンジニア／アーキテクト</span></div>
+                </div>
+                <div class="team-credit-block">
+                    <div class="role">統合サポート</div>
+                    <div class="detail">秋山俊也（武将猛牛）</div>
+                </div>
+                <div class="team-credit-block">
+                    <div class="role">スライド作成</div>
+                    <div class="detail">山蔦栄太郎（EITAROx）</div>
+                </div>
+            </div>
+            <div class="slide-number">16 / 17</div>
+        </div>
+
+        <!-- スライド17: 締め -->
         <div class="slide">
             <div class="content closing-slide">
                 <h2>ロボットと生きる未来へ</h2>
@@ -474,17 +869,19 @@
                     <span class="emphasis">いてくれると、ちょっと嬉しい。</span><br>
                     そんなロボットとの関係を提案します。
                 </p>
+                <!--
                 <div class="clap-action">
                     <p>お手を拝借。</p>
                     <p style="font-size: 2.2rem; margin: 1rem 0;">👏</p>
                     <p>ありがとうございました。</p>
                 </div>
+                -->
             </div>
-            <div class="slide-number">12 / 12</div>
+            <div class="slide-number">17 / 17</div>
         </div>
     </div>
 
-    <div class="nav-hint">← → キーで操作 / スペースで次へ</div>
+    <div class="nav-hint">← →</div>
 
     <!-- スライドインジケーター -->
     <div class="slide-indicator" id="slideIndicator"></div>
@@ -517,7 +914,16 @@
             });
         }
 
+        function pauseSomaVideos() {
+            document.querySelectorAll('.slide-soma video').forEach((v) => {
+                v.pause();
+                v.currentTime = 0;
+            });
+        }
+
         function showSlide(index) {
+            pauseSomaVideos();
+
             slides.forEach(slide => slide.classList.remove('active'));
             
             if (index < 0) index = 0;
@@ -527,6 +933,11 @@
             slides[currentSlide].classList.add('active');
             updateIndicators();
         }
+
+        // SOMA スライド：動画コントロール操作でスライド送りにしない
+        document.getElementById('somaVideoGrid')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+        }, true);
 
         // キーボード操作
         document.addEventListener('keydown', (e) => {
