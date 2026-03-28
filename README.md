@@ -19,9 +19,17 @@
 ```
 UnitreeG1_hackathon/
 ├── demo/                        # G1 実機動作スクリプト
-│   ├── nirei_nihakushu_ichirei.py   # 二礼二拍手一礼
-│   ├── omotenashi.py                # おもてなし歓迎シーケンス
-│   ├── otemae.py                    # お点前（茶道風）
+│   ├── pre/                         # 定義済みアクション系デモ
+│   │   ├── nirei_nihakushu_ichirei.py   # 二礼二拍手一礼
+│   │   ├── omotenashi.py                # おもてなし歓迎シーケンス
+│   │   ├── otemae.py                    # お点前（茶道風）
+│   │   ├── clap.py                      # 拍手単体テスト
+│   │   ├── test_audio.py                # 音声動作確認
+│   │   ├── seiza.py                     # 正座
+│   │   ├── chasen_motion.py             # 茶筅モーション
+│   │   ├── ojigi.py                     # お辞儀
+│   │   ├── ippon.wav                    # 音声ファイル
+│   │   └── clap.wav                     # 音声ファイル
 │   ├── ippon_jime.py                # 一本締め（TTS + Clap）
 │   ├── play_harebare.py             # CSVモーション再生
 │   └── harebare.csv                 # モーションデータ
@@ -56,9 +64,9 @@ pip install -e ./unitree_sdk2_python
 ### 共通の実行方法
 
 ```bash
-python demo/<スクリプト名>.py <ネットワークインターフェース名>
+python demo/pre/<スクリプト名>.py <ネットワークインターフェース名>
 # 例
-python demo/omotenashi.py eth2
+python demo/pre/omotenashi.py eth2
 ```
 
 | 環境 | インターフェース確認 | 例 |
@@ -73,7 +81,7 @@ python demo/omotenashi.py eth2
 
 ---
 
-### 二礼二拍手一礼（`nirei_nihakushu_ichirei.py`）
+### 二礼二拍手一礼（`demo/pre/nirei_nihakushu_ichirei.py`）
 
 神社参拝の作法を再現します。
 
@@ -86,12 +94,12 @@ python demo/omotenashi.py eth2
 | 5 | 一礼 | LowStand |
 
 ```bash
-python demo/nirei_nihakushu_ichirei.py eth2
+python demo/pre/nirei_nihakushu_ichirei.py eth2
 ```
 
 ---
 
-### おもてなし（`omotenashi.py`）
+### おもてなし（`demo/pre/omotenashi.py`）
 
 来客を迎える歓迎シーケンスです。
 
@@ -104,12 +112,12 @@ python demo/nirei_nihakushu_ichirei.py eth2
 | 5 | お辞儀 | LowStand |
 
 ```bash
-python demo/omotenashi.py eth2
+python demo/pre/omotenashi.py eth2
 ```
 
 ---
 
-### お点前（`otemae.py`）
+### お点前（`demo/pre/otemae.py`）
 
 茶道の所作を定義済みアクションで表現します。
 
@@ -122,12 +130,12 @@ python demo/omotenashi.py eth2
 | 5 | 一礼 | LowStand |
 
 ```bash
-python demo/otemae.py eth2
+python demo/pre/otemae.py eth2
 ```
 
 ---
 
-### 一本締め（`ippon_jime.py`）
+### 一本締め（`demo/ippon_jime.py`）
 
 TTS アナウンス → Clap × 3回 の一本締めシーケンスです。
 
@@ -144,7 +152,7 @@ python demo/ippon_jime.py eth2
 
 ---
 
-### CSVモーション再生（`play_harebare.py`）
+### CSVモーション再生（`demo/play_harebare.py`）
 
 `harebare.csv` の関節角度データを arm_sdk で再生します。
 
@@ -176,8 +184,6 @@ G1 関節CSV（29 DOF）
 ### 使い方
 
 `movie2motion/movie2motion.ipynb` を Google Colaboratory で開いて実行してください。
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/)
 
 **参考：** [NVlabs/GEM-X](https://github.com/NVlabs/GEM-X)
 
