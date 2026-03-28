@@ -13,12 +13,12 @@ from unitree_sdk2py.g1.loco.g1_loco_client import LocoClient
 from unitree_sdk2py.g1.arm.g1_arm_action_client import G1ArmActionClient, action_map
 
 
-def bow(sport_client: LocoClient, hold_sec: float = 1.5) -> None:
-    """StandUp2Squat → wait → Squat2StandUp で「礼」を表現"""
-    sport_client.StandUp2Squat()
+def bow(sport_client: LocoClient, hold_sec: float = 2.0) -> None:
+    """LowStand → wait → HighStand で「礼」を表現"""
+    sport_client.LowStand()
     time.sleep(hold_sec)
-    sport_client.Squat2StandUp()
-    time.sleep(1.5)  # 次の動作までの間
+    sport_client.HighStand()
+    time.sleep(2.0)  # 元の高さに戻るまで待つ
 
 
 def clap(arm_client: G1ArmActionClient, wait_sec: float = 2.5) -> None:
