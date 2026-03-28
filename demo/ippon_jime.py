@@ -51,7 +51,7 @@ def main():
     for i in range(1, 4):
         print(f"[Clap] 一本締め {i}/3...")
         arm.ExecuteAction(action_map["clap"])
-        time.sleep(4.0)
+        time.sleep(2.0)
 
     tts(audio, "Thanks for today, yeah!", 3.0)
 
